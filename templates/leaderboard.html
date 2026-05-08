@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - CodeRealm{% endblock %}
+
+{% block content %}
+<main>
+    <h1 class="head">Leaderboard</h1>
+
+    <div class="leaderboard-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Level</th>
+                    <th>XP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in leaderboard %}
+                <tr class="clickable-row" data-user-id="{{ user.id }}">
+                    <td>{{ loop.index }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.level }}</td>
+                    <td>{{ user.xp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Leaderboard Profile Modal -->
+    <div id="profileModal" class="modal">
+        <span class="close">&times;</span>
+
+        <div class="profile-container">
+            <div class="profile-header">
+                <h2>Character Profile</h2>
+            </div>
+
+            <div class="profile-content">
+                <!-- Character Info -->
+                <div class="profile-card">
+                    <h3>Character Info</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td>Name:</td>
+                            <td id="modalUsername"></td>
+                        </tr>
+                        <tr>
+                            <td>Level:</td>
+                            <td id="modalLevel"></td>
+                        </tr>
+                        <tr>
+                            <td>XP:</td>
+                            <td id="modalXP"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Quest Statistics -->
+                <div class="profile-card">
+                    <h3>Quest Statistics</h3>
+                    <table class="info-table">
+                        <tr>
+                            <td>Completed Quests:</td>
+                            <td id="modalCompletedQuests"></td>
+                        </tr>
+                        <tr>
+                            <td>Problems Solved:</td>
+                            <td id="modalProblemsSolved"></td>
+                        </tr>
+                        <tr>
+                            <td>Achievements Unlocked:</td>
+                            <td id="modalAchievementsCount"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Achievements -->
+            <div class="profile-card" id="modalAchievementsCard" style="margin-top: 2rem; display:none;">
+                <h3>Recent Achievements</h3>
+                <div class="achievements-preview" id="modalAchievementsPreview"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// Modal and overlay
+const modal = document.getElementById("profileModal");
+const overlay = document.getElementById("overlay");
+const closeBtn = modal.querySelector(".close");
+
+// Click leaderboard row
+document.querySelectorAll(".clickable-row").forEach(row => {
+    row.addEventListener("click", () => {
+        const userId = row.dataset.userId;
+        if (!userId) return;
+
+        fetch(`/profile_data/${userId}`)
+            .then(res => res.json())
+            .then(user => populateModal(user))
+            .catch(err => console.error("Error fetching profile:", err));
+    });
+});
+
+// Populate modal
+function populateModal(user) {
+    document.getElementById("modalUsername").textContent = user.username;
+    document.getElementById("modalLevel").textContent = user.level;
+    document.getElementById("modalXP").textContent = user.xp;
+    document.getElementById("modalCompletedQuests").textContent = `${user.completed_quests} / ${user.total_quests}`;
+    document.getElementById("modalProblemsSolved").textContent = `${user.completed_problems} / ${user.total_problems}`;
+    document.getElementById("modalAchievementsCount").textContent = user.achievements.length;
+
+    const achievementsDiv = document.getElementById("modalAchievementsPreview");
+    achievementsDiv.innerHTML = "";
+
+    if (user.achievements.length > 0) {
+        document.getElementById("modalAchievementsCard").style.display = "block";
+        user.achievements.slice(0,5).forEach(a => {
+            const div = document.createElement("div");
+            div.className = "achievement-item";
+            div.innerHTML = `
+                <span class="achievement-icon">${a.icon}</span>
+                <div class="achievement-info">
+                    <strong>${a.name}</strong>
+                    <p class="achievement-desc">${a.description}</p>
+                    <small class="achievement-date">Earned ${a.earned_at.split(' ')[0]}</small>
+                </div>`;
+            achievementsDiv.appendChild(div);
+        });
+
+        if (user.achievements.length > 5) {
+            const moreDiv = document.createElement("div");
+            moreDiv.className = "achievements-more";
+            moreDiv.innerHTML = `<a href="/achievements">View all ${user.achievements.length} achievements →</a>`;
+            achievementsDiv.appendChild(moreDiv);
+        }
+    } else {
+        document.getElementById("modalAchievementsCard").style.display = "none";
+    }
+
+    modal.classList.add("show");
+    overlay.classList.add("show");
+}
+
+// Close modal
+closeBtn.addEventListener("click", closeModal);
+overlay.addEventListener("click", closeModal);
+
+function closeModal() {
+    modal.classList.remove("show");
+    overlay.classList.remove("show");
+}
+</script>
+{% endblock %}

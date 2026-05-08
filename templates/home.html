@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - CodeRealm{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="head">
+            Master<span class="dsa"> DSA</span> with CodeRealm
+        </div>
+        <p class="hero-subtext">
+            Practice Data Structures and Algorithms with our comprehensive problem sheet. 
+            Track your progress, earn XP, and level up your coding skills!
+        </p>
+        <div class="cta-button-container">
+            {% if session.username %}
+            <a href="{{ url_for('quests') }}">
+            {% else %}
+            <a href="{{ url_for('login') }}">
+            {% endif %}
+                <button class="primary-button">
+                    Start your journey
+                </button>
+            </a>
+        </div>
+        <div class="features-list">
+            <div class="feature-item">
+                <span>&#x2705;</span>
+                <span>Structured Learning Path</span>
+            </div>
+            <div class="feature-item">
+                <span>&#x1F4CA;</span>
+                <span>Progress Tracking</span>
+            </div>
+            <div class="feature-item">
+                <span>&#x2B50;</span>
+                <span>XP & Leveling</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-section">
+    <h2 class="section-title">What's Inside</h2>
+    <div class="quest-cards">
+        <div class="quest-card">
+            <div class="card-icon">&#x1F4C2;</div>
+            <h3>Structured Quests</h3>
+            <p>Organized DSA topics to guide your learning journey</p>
+        </div>
+
+        <div class="quest-card">
+            <div class="card-icon">&#x1F4C4;</div>
+            <h3>Problem Sheets</h3>
+            <p>Solve curated problems to master each topic</p>
+        </div>
+
+        <div class="quest-card">
+            <div class="card-icon">&#x1F4CA;</div>
+            <h3>Progress Tracking</h3>
+            <p>Monitor your completed problems and XP earned</p>
+        </div>
+
+        <div class="quest-card">
+            <div class="card-icon">&#x2B50;</div>
+            <h3>XP & Leveling</h3>
+            <p>Earn XP, level up, and unlock new quests</p>
+        </div>
+
+        <div class="quest-card">
+            <div class="card-icon">&#x1F513;</div>
+            <h3>Unlockable Quests</h3>
+            <p>Advanced challenges unlock as you progress</p>
+        </div>
+    </div>
+    </section>
+
+    <section class="how-it-works-section">
+        <div class="info-card">
+            <h2 class="section-title">How CodeRealm Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-icon">&#x1F464;</div>
+                    <h5 class="step-title">1. Sign Up</h5>
+                    <p class="step-description">Create your account and start your coding journey</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">&#x1F4DD;</div>
+                    <h5 class="step-title">2. Practice</h5>
+                    <p class="step-description">Solve problems organized by topics and difficulty</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">&#x1F4B0;</div>
+                    <h5 class="step-title">3. Earn XP</h5>
+                    <p class="step-description">Get 50 XP for each problem you complete</p>
+                </div>
+                <div class="step">
+                    <div class="step-icon">&#x1F3C6;</div>
+                    <h5 class="step-title">4. Level Up</h5>
+                    <p class="step-description">Unlock new quests as you progress and level up</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="cta-card">
+            <h3 class="cta-title">Ready to Start Your DSA Journey?</h3>
+            <p class="cta-text">
+                Join thousands of developers improving their algorithmic thinking
+            </p>
+            {% if session.username %}
+            <a href="{{ url_for('quests') }}">
+            {% else %}
+            <a href="{{ url_for('register') }}">
+            {% endif %}
+                <button class="primary-button large-button">
+                    Get Started Now
+                </button>
+            </a>
+        </div>
+    </section>
+{% endblock %}

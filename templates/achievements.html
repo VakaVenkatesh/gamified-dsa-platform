@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Achievements - CodeRealm{% endblock %}
+
+{% block content %}
+<main>
+    <div class="achievements-container">
+        <div class="achievements-header">
+            <h1 class="head">Achievements</h1>
+            {% set reward_texts = {
+            "First Steps": "🎉 Completed your 1st problem",
+            "Getting Started": "🚀 Solved 5 problems",
+            "Problem Solver": "🧠 Solved 10 problems",
+            "Dedicated Learner": "📚 Solved 25 problems",
+            "Rising Star": "⭐ Reached Level 5",
+            "Array Master": "🔢 Mastered Arrays & Lists",
+            "List Ninja": "🥷 Completed Linked Lists",
+            "Recursion Expert": "🔄 Recursion & Backtracking",
+            "Search Specialist": "🔍 Sorting & Searching",
+            "Tree Climber": "🌳 Binary Trees & BST",
+            "Graph Explorer": "🗺️ Graph Algorithms",
+            "DSA Master": "👑 Completed all quests",
+            "Level Up!":" 🎉 Reached Level 2",
+            "Legend":"  👑 Reached Level 10",
+            } %}
+            <div class="achievements-stats">
+                <p>{{ earned_count }} / {{ total_count }} achievements unlocked</p>
+                <div class="achievements-progress-bar">
+                    <div class="progress-fill" style="width: {{ (earned_count / total_count * 100) if total_count > 0 else 0 }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-grid">
+            {% for achievement in achievements %}
+            <div class="achievement-card {% if achievement.earned %}earned{% else %}locked{% endif %}">
+                <div class="achievement-icon-large">{{ achievement.icon }}</div>
+                <div class="achievement-content">
+                    <h3 class="achievement-title">{{ achievement.name }}</h3>
+                    <p class="achievement-description">{{ achievement.description }}</p>
+                    <div class="achievement-reward">{{ reward_texts.get(achievement.name) }}</div>
+                    
+                    {% if achievement.earned %}
+                    <div class="achievement-earned">
+                        <span class="achievement-status">✓ Earned</span>
+                        {% if achievement.earned_at %}
+                        <span class="achievement-date">{{ achievement.earned_at.split()[0] }}</span>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div class="achievement-locked">
+                        <span class="achievement-status">🔒 Locked</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+{% endblock %}

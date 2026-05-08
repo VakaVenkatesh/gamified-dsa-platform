@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - CodeRealm{% endblock %}
+
+{% block content %}
+<main>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h2>Character Profile</h2>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-card">
+                <h3>Character Info</h3>
+                <table class="info-table">
+                    <tr>
+                        <td>Name:</td>
+                        <td>{{ session.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>Level:</td>
+                        <td>{{ progress.level }}</td>
+                    </tr>
+                    <tr>
+                        <td>XP:</td>
+                        <td>{{ progress.xp }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="profile-card">
+                <h3>Quest Statistics</h3>
+                <table class="info-table">
+                    <tr>
+                        <td>Completed Quests:</td>
+                        <td>{{ progress.completed_quests }} / {{ progress.total_quests }}</td>
+                    </tr>
+                    <tr>
+                        <td>Problems Solved:</td>
+                        <td>{{ progress.completed_problems }} / {{ progress.total_problems }}</td>
+                    </tr>
+                    <tr>
+                        <td>Achievements Unlocked:</td>
+                        <td>{{ achievements|length }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {% if achievements %}
+        <div class="profile-card" style="margin-top: 2rem;">
+            <h3>Recent Achievements</h3>
+            <div class="achievements-preview">
+                {% for achievement in achievements[:5] %}
+                <div class="achievement-item">
+                    <span class="achievement-icon">{{ achievement.icon }}</span>
+                    <div class="achievement-info">
+                        <strong>{{ achievement.name }}</strong>
+                        <p class="achievement-desc">{{ achievement.description }}</p>
+                        <small class="achievement-date">Earned {{ achievement.earned_at.split()[0] }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                {% if achievements|length > 5 %}
+                <div class="achievements-more">
+                    <a href="{{ url_for('achievements') }}">View all {{ achievements|length }} achievements →</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

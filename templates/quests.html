@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Quests - CodeRealm{% endblock %}
+
+{% block content %}
+<div class="head">Master<span class="dsa"> DSA</span> with CodeRealm</div>
+<div class="quest-cards">
+    {% for quest in quests %}
+    {% set is_unlocked = user_level >= quest.level_required %}
+    <a href="{{ url_for('quest_detail', quest_key=quest.quest_key) }}" class="quest-card-link">
+        <div class="quest-card">
+            <h3>
+                {% if quest.quest_key == 'arrays_lists' %}&#x1F4C3;
+                {% elif quest.quest_key == 'sorting_searching' %}&#x1F50D;
+                {% elif quest.quest_key == 'linked_lists' %}&#x1F517;
+                {% elif quest.quest_key == 'recursion_backtracking' %}&#x21BB;
+                {% elif quest.quest_key == 'binary_trees' %}&#x1F333;
+                {% elif quest.quest_key == 'graph_algorithms' %}&#x1F578;&#xFE0F;
+                {% elif quest.quest_key == 'heaps_priority' %}&#x1F48E;
+                {% elif quest.quest_key == 'hashing' %}&#x1F5DD;&#xFE0F;
+                {% elif quest.quest_key == 'dynamic_programming' %}&#x1F4A1;
+                {% elif quest.quest_key == 'advanced_graphs' %}&#x1F9E9;
+                {% else %}&#x1F4A1;{% endif %}
+                {{ quest.title }}
+            </h3>
+            <p>{{ quest.description }}</p>
+            <div class="progress">{{ quest.progress.completed }}/{{ quest.progress.total }} problems</div>
+            <div class="bar">
+                <div style="width: {{ quest.progress.percentage }}%;"></div>
+            </div>
+
+            <ul class="problem-list">
+                {% for problem in quest.problems %}
+                <li>
+                    <input type="checkbox" disabled {% if problem.completed %}checked{% endif %}>
+                    {{ problem.title }}
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% if not is_unlocked %}
+            <div class="lock-msg">&#x1F512; Unlock at Level {{ quest.level_required }}</div>
+            {% endif %}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

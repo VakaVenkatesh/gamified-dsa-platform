@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CodeRealm{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='logo.webp') }}" alt="CodeRealm Logo">
+            <h2>CodeRealm</h2>
+        </div>
+        <nav class="nav-container">
+            {% if session.username %}
+            <div class="logged-in-nav">
+                <div class="user-info">
+                    <div class="username" id="header-username">{{ session.username }}</div>
+                    <div id="header-level-bar" class="level-bar">
+                        {% if progress %}
+                        Level {{ progress.level }} | {{ progress.xp }}/{{ progress.xp + progress.xp_needed }} XP
+                    </div>
+                    <div class="xp-bar">
+                        <div id="header-xp-fill" class="xp-fill" style="width: {{ progress.xp_percentage }}%;"></div>
+                    </div>
+                    {% endif %}
+                </div>
+            {% else %}
+            <div class="log-reg">
+                <a href="{{ url_for('login') }}" class="login_button">Login</a>
+                <a href="{{ url_for('register') }}" class="register_button">Register</a>
+            </div>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="nav">
+        {% if session.username %}
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('quests') }}">Quests</a>
+            <a href="{{ url_for('achievements') }}">Achievements</a>
+            <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('logout') }}" class="logout-button">Log Out</a>
+        {% endif %}
+    </div>
+
+    <main class="main-content">
+        <div id="level-toast-container"></div>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <div id="toast-container" class="toast-container"></div>
+    
+    <footer>
+        <div class="footer-container">
+            <p>
+                &copy; 2025 CodeRealm. Master Data Structures & Algorithms through gamification.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+    window.initialMessages = [
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                { category: "{{ category }}", message: "{{ message }}" }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        {% endwith %}
+    ];
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

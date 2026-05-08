@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ quest.title }} - CodeRealm{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <div class="main-card primary-bg">
+            <div class="card-body">
+                <div class="card-row">
+                    <div class="card-col">
+                        <h1 class="card-title">
+                            <span class="icon-code-lg"></span> {{ quest.title }}
+                        </h1>
+                        <p class="card-subtitle">Master Data Structures & Algorithms through structured practice</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="quests-container">
+            <div class="problems-card">
+                <div class="problem-table-container">
+                    <table class="problem-table">
+                        <thead class="table-header">
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th>Problem</th>
+                                <th style="width: 15%;">Difficulty</th>
+                                <th style="width: 10%;">Status</th>
+                                <th style="width: 10%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    {% if progress.unlocked %}
+        {% for problem in problems %}
+        <tr class="{% if problem.completed %}problem-completed{% endif %}">
+            <td>{{ loop.index }}</td>
+            <td>
+                <strong>{{ problem.title }}</strong>
+            </td>
+            <td>
+                <span class="difficulty-badge difficulty-{{ problem.difficulty.lower() }}">
+                    {{ problem.difficulty }}
+                </span>
+            </td>
+            <td>
+                <div class="problem-status">
+                    <input class="problem-checkbox" 
+                           type="checkbox" 
+                           id="problem_{{ problem.problem_key }}"
+                           data-problem-key="{{ problem.problem_key }}"
+                           {% if problem.completed %}checked{% endif %}>
+                </div>
+            </td>
+            <td>
+                <a href="{{ problem.leetcode_url }}" 
+                   target="_blank" 
+                   class="solve-button">
+                    Solve
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="5" style="text-align:center; font-weight:bold; color:#888;">
+                🔒 Reach Level {{ quest.level_required }} to unlock this quest.
+            </td>
+        </tr>
+    {% endif %}
+</tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
